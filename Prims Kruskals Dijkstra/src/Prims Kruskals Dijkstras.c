@@ -10,10 +10,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <conio.h>
 #include <ctype.h>
 #include <string.h>
 
-#define N 7
+#define N 4
 #define INFINITY 32767
 
 typedef struct Edge{
@@ -21,12 +22,12 @@ typedef struct Edge{
 }Edge;
 
 void createWeightedGraph(int a[N][N]);
-void Prims(int a[N][N], int start);
-void Dijkstra(int a[N][N], int start);
+void Prims(int a[N][N]);
+void Dijkstra(int a[N][N]);
 void Kruskals(int a[N][N]);
 
 int main(void) {
-	int ch, a[N][N],start;
+	int ch, a[N][N];
 
 	setbuf(stdout,NULL);
 	printf("Enter choice : \n1 for Create Graph\n2 for Prims\n3 For Kruskals\n4 for Dijkstras\n");
@@ -41,9 +42,7 @@ int main(void) {
 			break;
 		}
 		case 2:{
-			printf("Enter start char : ");
-			scanf("%c",&start);
-			Prims(a, start);
+			Prims(a);
 			break;
 		}
 		case 3:{
@@ -51,9 +50,8 @@ int main(void) {
 			break;
 		}
 		case 4:{
-			printf("Enter start char : ");
-			scanf("%c",&start);
-			Dijkstra(a, start);
+
+			Dijkstra(a);
 			break;
 		}
 		default:{
@@ -97,12 +95,12 @@ void createWeightedGraph(int a[N][N]){
 	}while(ch == 1);
 }
 
-void Prims(int a[N][N], int start){
-	int dist[N], previous[N], selected[N];
-	int i,j,c,x = start-65;
+void Prims(int a[N][N]){
+	int dist[N], previous[N], selected[N] = {0};
+	int i,c,x;
 	int sum = 0, d, m, min;
-	char p[N] = {0};
-	int k;
+	int start = 65;
+	x = 0;
 
 	for(i = 0; i < N; i++)
 		dist[i] = INFINITY;
@@ -110,10 +108,10 @@ void Prims(int a[N][N], int start){
 	start -= 65;
 
 	dist[start] = 0;
-	selected[start] = 0;
+	selected[start] = 1;
 
-	for(c = 1; c < N; c++){
-		for(i = 0; i < N; i++){
+	for(c = 1; c < N; c++) {
+		for(i = 0; i < N; i++) {
 			d = a[start][i];
 
 			if(!selected[i] && d < dist[i]){
@@ -130,7 +128,6 @@ void Prims(int a[N][N], int start){
 				min = dist[i];
 				m = i;
 			}
-
 		}
 
 		start = m;
@@ -148,33 +145,17 @@ void Prims(int a[N][N], int start){
 	}
 
 	printf("Cost of tree : %d\n", sum);
-
-	for(i = 0; i < N; i++){
-		k = 0;
-
-		if(i != x){
-			j = i;
-			p[k++] = j+65;
-
-			while(j != x){
-				j = previous[j];
-				p[k++] = j+65;
-			}
-
-			p[k] = 0;
-			strrev(p);
-			printf("%s", p);
-		}
-	}
-
 }
 
-void Dijkstra(int a[N][N], int start){
-	int dist[N], previous[N], selected[N];
-	int i,j,c,x = start-65;
+void Dijkstra(int a[N][N]){
+	int dist[N], previous[N], selected[N] = {0};
+	int i,j,c,x;
 	int sum = 0, d, m, min;
 	char p[N] = {0};
 	int k;
+	int start = 65;
+	x = 0;
+
 
 	for(i = 0; i < N; i++)
 		dist[i] = INFINITY;
@@ -182,7 +163,7 @@ void Dijkstra(int a[N][N], int start){
 	start -= 65;
 
 	dist[start] = 0;
-	selected[start] = 0;
+	selected[start] = 1;
 
 	for(c = 1; c < N; c++){
 		for(i = 0; i < N; i++){
@@ -202,7 +183,6 @@ void Dijkstra(int a[N][N], int start){
 				min = dist[i];
 				m = i;
 			}
-
 		}
 
 		start = m;
@@ -221,6 +201,8 @@ void Dijkstra(int a[N][N], int start){
 
 	printf("Cost of tree : %d\n", sum);
 
+	printf("Paths : \n");
+
 	for(i = 0; i < N; i++){
 		k = 0;
 
@@ -233,9 +215,10 @@ void Dijkstra(int a[N][N], int start){
 				p[k++] = j+65;
 			}
 
-			p[k] = 0;
+			p[k] = '\0';
 			strrev(p);
-			printf("%s", p);
+
+			printf("%s\n", p);
 		}
 	}
 
@@ -300,12 +283,3 @@ void Kruskals(int a[N][N]){
 	printf("Weight of tree is : %d",sum);
 
 }
-
-
-
-
-
-
-
-
-
